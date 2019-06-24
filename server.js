@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-let connections = [];
-let players = [];
+var connections = [];
+var players = [];
 
 function Player(id, x, y, v, w, h, p) {
     this.id = id;
@@ -45,13 +45,13 @@ la informacion de los jugadores y al cliente le llegue la informacion de lo que 
 function heartBeat() {
     io.sockets.emit('heartBeat', players);
 }
-setInterval(function() { heartBeat() }, 33);
+setInterval(heartBeat, 33);
 
 /*
 *Cada vez que se haga una conexion  se agregara un socket
 al array 'connections'
 */
-io.sockets.on('connection', (socket) => {
+io.sockets.on('connection', function(socket) {
     connections.push(socket);
     getCounter(); //Cuando un cliente se conecta automaticamente le decimos cuantos jugadores hay
     socket.on('start', (data) => {
@@ -61,8 +61,8 @@ io.sockets.on('connection', (socket) => {
     })
 
     socket.on('update', function(data) {
-        let pl;
-        for (i = 0; i < players.length; i++) {
+        var pl;
+        for (var i = 0; i < players.length; i++) {
             if (socket.id === players[i].id)
                 pl = players[i];
         }
@@ -72,5 +72,6 @@ io.sockets.on('connection', (socket) => {
         pl.w = data.w;
         pl.h = data.h;
         pl.p = data.p;
+
     })
 });

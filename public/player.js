@@ -13,17 +13,13 @@ function Player(x) {
 
 
 
-    this.move = function(b) {
-        //if (b.x < width / 2) {
+    this.move = function() {
+
         if (p.y < mouseY)
             p.y += p.velocityy;
         else if (p.y > mouseY)
             p.y -= p.velocityy;
-        else if (p.x < mouseX)
-            p.x += p.velocityx;
-        else if (p.x > mouseX)
-            p.x -= p.velocityx;
-        //}
+
     }
 
 }
