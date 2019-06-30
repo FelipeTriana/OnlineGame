@@ -51,14 +51,28 @@ setInterval(heartBeat, 33);
 *Cada vez que se haga una conexion  se agregara un socket
 al array 'connections'
 */
+
 io.sockets.on('connection', function(socket) {
     connections.push(socket);
+    console.log('Un usuario se ha conectado ' + socket.id + 'Numero de conexion: ' + connections.length);
     getCounter(); //Cuando un cliente se conecta automaticamente le decimos cuantos jugadores hay
+
     socket.on('start', (data) => {
-        console.log(`Un usuario se ha conectado: ${socket.id} numero de conexion: ${connections.length}`);
-        var p = new Player(socket.id, data.x, data.y, data.w, data.h, data.p);
+        var p = new Player(socket.id, data.x, data.y, data.v, data.w, data.h, data.p);
+
+        for (var i = 0; i < players.length - 1; i++) {
+            for (var j = i + 1; j < players.length; j++) {
+                if (players[i].id === players[j].id) {
+                    players.pop(j);
+                }
+            }
+        }
         players.push(p);
+        console.log('Socket: ' + players[i].id + ' Jugadores: ' + players.length);
+
     })
+
+
 
     socket.on('update', function(data) {
         var pl;

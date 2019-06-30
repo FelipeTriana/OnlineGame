@@ -4,7 +4,7 @@ function Drop(x, y) {
 
     this.show = function() {
         fill(150, 0, 250);
-        ellipse(this.x, this.y, 50, 50);
+        ellipse(this.x, this.y, 10, 10);
     }
 
     this.move = function(dir) {

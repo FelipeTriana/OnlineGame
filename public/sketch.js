@@ -9,7 +9,7 @@ let counter = 0; //Variable para saber cuantos clientes hay conectados y saber e
 var dir;
 
 function setup() {
-    socket = io.connect('http://localhost:3000');
+    socket = io();
     createCanvas(750, 600);
     drop = new Drop(width / 2, height / 2);
     socket.on('getCounter', function(data) { //Debemos desde aqui llamar al getCounter
@@ -20,11 +20,12 @@ function setup() {
 
                 dir = 1;
             } else {
-                p = new Player(width); //En su posicion en x le enviamos el ancho para que salga al lado derecho de la pantalla
+                p = new Player(680); //En su posicion en x le enviamos el ancho para que salga al lado derecho de la pantalla
                 dir = -1;
 
             }
         }
+
         var data = { //Aqui debemos mandar los datos de cada jugador, luego en el server reimplementaremos como guardar cada jugador en el array players
             x: p.x,
             y: p.y,
@@ -66,9 +67,10 @@ function draw() {
         for (var i = 0; i < players.length; i++) {
             var id = players[i].id;
             if (id !== socket.id) {
-                fill(255, 0, 0);
-                rectMode(CENTER);
-                rect(players[i].x, players[i].y, players[i].w, players[i].h);
+                // fill(255, 0, 0);
+                // rectMode(CENTER);
+                // rect(players[i].x, players[i].y, players[i].w, players[i].h);
+                image(img2, players[i].x, players[i].y, players[i].w, players[i].h);
 
             }
         }
