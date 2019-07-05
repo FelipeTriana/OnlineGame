@@ -44,6 +44,7 @@ function setup() {
     socket.on('heartBeat', function(data) { //Se encarga de refrescar la informacion suministrada por la funcion heartBeat()
         players = data; //Al array de jugadores de le suministra los datos enviados por heartBeat()
     });
+
 }
 
 function draw() {
@@ -59,6 +60,11 @@ function draw() {
         for (i = 0; i < drops.length; i++) {
             drops[i].show();
             drops[i].move(dir);
+            var data = {
+                x: drops[i].x,
+                y: drops[i].y
+            }
+            socket.emit('updateDrop', data);
         }
 
 
@@ -67,9 +73,7 @@ function draw() {
         for (var i = 0; i < players.length; i++) {
             var id = players[i].id;
             if (id !== socket.id) {
-                // fill(255, 0, 0);
-                // rectMode(CENTER);
-                // rect(players[i].x, players[i].y, players[i].w, players[i].h);
+
                 image(img2, players[i].x, players[i].y, players[i].w, players[i].h);
 
             }
@@ -92,6 +96,20 @@ function keyPressed() {
     if (key === ' ') {
 
         var drop = new Drop(p.x, p.y);
+
+        var data = {
+            x: drop.x,
+            y: drop.y
+        }
+
+        socket.emit('startDrop', data);
         drops.push(drop);
+
+        socket.on('heartBeatDrop', function(data) {
+            if (data !== null) {
+                drop.x = data.x;
+                drop.y = data.y;
+            }
+        });
     }
 }

@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 var connections = [];
 var players = [];
+var b;
 
 function Player(id, x, y, v, w, h, p) {
     this.id = id;
@@ -12,6 +13,11 @@ function Player(id, x, y, v, w, h, p) {
     this.w = w;
     this.h = h;
     this.p = p;
+}
+
+function Drop(id, x, y) {
+    this.x = x;
+    this.y = y;
 }
 
 //Settings
@@ -47,6 +53,11 @@ function heartBeat() {
 }
 setInterval(heartBeat, 33);
 
+function heartBeatDrop() {
+    io.sockets.emit('heartBeatDrop', b);
+}
+setInterval(heartBeatDrop, 33);
+
 /*
 *Cada vez que se haga una conexion  se agregara un socket
 al array 'connections'
@@ -69,9 +80,14 @@ io.sockets.on('connection', function(socket) {
         }
         players.push(p);
         console.log('Socket: ' + players[i].id + ' Jugadores: ' + players.length);
-
+        for (var i = 0; i < players.length; i++) {
+            console.log('Jugador numero: ' + i + ' Socket: ' + players[i].id);
+        }
     })
 
+    socket.on('startDrop', (data) => {
+        b = new Drop(socket.id, data.x, data.y);
+    })
 
 
     socket.on('update', function(data) {
@@ -87,5 +103,13 @@ io.sockets.on('connection', function(socket) {
         pl.h = data.h;
         pl.p = data.p;
 
-    })
+    });
+
+    socket.on('updateDrop', function(data) {
+        b.x = data.x;
+        b.y = data.y;
+
+    });
+
+
 });
